@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Gerador de INT_MESSAGE</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style media="screen">
+      #copyAlert{
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Gerador de INT_MESSAGE</h1>
+      <form>
+        <div class="form-group">
+          <label for="translationKey">Chave de Tradução</label>
+          <input type="text" name="translationKey" id="translationKey" class="form-control" value="">
+          <small class="form-text text-muted">Sua chave de tradução. Por exemplo: #sys.erro</small>
+        </div>
+        <div id="translationsBox">
+        </div>
+        <label>Resultado</label>
+        <div class="alert alert-primary" id="copyAlert" role="alert">
+          Resultado copiado para a Área de Transferência.
+        </div>
+        <textarea rows="3" class="form-control" id="translationResult"></textarea>
+        <small class="form-text text-muted">Clique no resultado para copiar para a Área de Transferência.</small>
+      </form>
+    </div>
+    <script src="script.js" charset="utf-8"></script>
+  </body>
+</html>
