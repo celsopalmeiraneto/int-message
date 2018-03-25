@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Gerador de INT_MESSAGE</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style media="screen">
@@ -11,13 +12,15 @@
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Gerador de INT_MESSAGE</h1>
-      <form>
+    <nav class="navbar navbar-light bg-light">
+      <h1 class="display-4">Gerador de INT_MESSAGE</h1>
+    </nav>
+    <div class="container mt-2">
+      <form autocomplete="off">
         <div class="form-group">
-          <label for="translationKey">Chave de Tradução</label>
-          <input type="text" name="translationKey" id="translationKey" class="form-control" value="">
-          <small class="form-text text-muted">Sua chave de tradução. Por exemplo: #sys.erro</small>
+          <label for="translationKey">Chaves de Tradução</label>
+          <textarea name="translationKey" id="translationKeys" class="form-control"></textarea>
+          <small class="form-text text-muted">Por exemplo: "#sys.erro". Uma chave por linha.</small>
         </div>
         <div id="translationsBox">
         </div>
@@ -25,7 +28,7 @@
         <div class="alert alert-primary" id="copyAlert" role="alert">
           Resultado copiado para a Área de Transferência.
         </div>
-        <textarea rows="3" class="form-control" id="translationResult"></textarea>
+        <textarea rows="3" class="form-control" id="translationResult" readonly></textarea>
         <small class="form-text text-muted">Clique no resultado para copiar para a Área de Transferência.</small>
       </form>
     </div>
