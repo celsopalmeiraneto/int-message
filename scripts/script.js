@@ -75,7 +75,7 @@ import Observer from "./Observer/Observer.js";
 
     let result = "BEGIN\n" + translations.reduce((acc, v) => {
       if(v && v.value && v.value.trim() !== ""){
-        acc += `    PR_ATUALIZA_INT_MESSAGE('${v.dataset.id}', '${v.dataset.key}', '${v.value}', 'S');\n`;
+        acc += `    PR_ATUALIZA_INT_MESSAGE('${v.dataset.id}', '${v.dataset.key}', '${v.value}', 'N');\n`;
         return acc;
       }
       return acc;

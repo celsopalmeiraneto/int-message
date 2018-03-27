@@ -31,7 +31,7 @@ class KeyGroup {
     this.setDefaultLanguage(changedItem);
     this.replicateValueForSameLanguage(changedItem, lang);
     this.replicateValueForOtherLanguage(changedItem, lang)
-      .then((v) => {
+      .then(() => {
         this.subject.notify(this);
       });
 
@@ -70,7 +70,7 @@ class KeyGroup {
   }
 
   async translateTexts(text, myLanguage, otherLanguages){
-     return await Promise.all(otherLanguages.map(async (otherLanguage) => {
+    return await Promise.all(otherLanguages.map(async (otherLanguage) => {
       return {
         language: otherLanguage,
         text: await translate(text, myLanguage, otherLanguage)

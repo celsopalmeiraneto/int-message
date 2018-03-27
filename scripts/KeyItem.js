@@ -59,7 +59,7 @@ class KeyItem {
           this.value = e.target.value;
           this.subject.notify(this);
         }
-      }, 500);
+      }, 600);
     };
 
     this.DOMElement = item;
