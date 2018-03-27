@@ -1,11 +1,15 @@
 import Subject from "./Observer/Subject.js";
 
+const KEYB_ALLOWED_KEYS = ["Key", "Digit", "Space", "Numpad", "Backspace", "Delete"];
+
 class KeyItem {
   constructor(key, language) {
     this.key = key;
     this.language = language;
     this.visible = true;
     this._value = "";
+
+    this.keyUpQueue = 0;
 
     this.DOMElement = null;
     this.subject = new Subject();
@@ -18,12 +22,21 @@ class KeyItem {
   set value(val){
     this._value = val;
     if(this.DOMElement != null){
-      this.DOMElement.children.item(1).value = val;
+      this.DOMElement.children.item(2).value = val;
+    }
+  }
+
+  setDefaultMarker(val){
+    if(this.DOMElement == null) return;
+    if(val === true){
+      this.DOMElement.children.item(1).classList.remove("d-none");
+    }else{
+      this.DOMElement.children.item(1).classList.add("d-none");
     }
   }
 
   render(){
-    const itemTemplate = `<label>Tradução</label>
+    const itemTemplate = `<label class="mr-2">Tradução</label><span class="badge badge-primary d-none">Padrão</span>
               <input type="text" class="form-control form-control-sm translationText" value="">`;
 
     let item = document.createElement("div");
@@ -33,16 +46,31 @@ class KeyItem {
     item.style.display = this.visible ? item.style.display : "none";
 
     item.children.item(0).textContent = this.language.text;
-    item.children.item(1).dataset.key = this.key;
-    item.children.item(1).dataset.id = this.language.id;
+    item.children.item(2).dataset.key = this.key;
+    item.children.item(2).dataset.id = this.language.id;
 
     item.onkeyup = (e) => {
-      this.value = e.target.value;
-      this.subject.notify(this);
+      if(!this.isKeyValid(e.code)) return false;
+      this.keyUpQueue++;
+
+      setTimeout(()=>{
+        this.keyUpQueue--;
+        if(this.keyUpQueue <= 0){
+          this.value = e.target.value;
+          this.subject.notify(this);
+        }
+      }, 500);
     };
 
     this.DOMElement = item;
     return item;
+  }
+
+  isKeyValid(keyCode){
+    for (let allowedKey of KEYB_ALLOWED_KEYS) {
+      if(keyCode.includes(allowedKey)) return true;
+    }
+    return false;
   }
 }
 

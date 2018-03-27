@@ -2,6 +2,7 @@ import KeyItem from "./KeyItem.js";
 
 import Observer from "./Observer/Observer.js";
 import Subject from "./Observer/Subject.js";
+import {translate} from "./Translator.js";
 
 const AVALABLE_LANGUAGES = [
   { id: "pt-BR", text: "Português - Brasil" },
@@ -24,15 +25,69 @@ class KeyGroup {
     this.subject = new Subject();
   }
 
-  _changesOnItems(e){
-    let lang = e.language.id.substr(0, 2);
-    this.items.forEach(v => {
-      if(e === v || !v.language.id.startsWith(lang)) return;
-      v.value = e.value;
-    });
+  _changesOnItems(changedItem){
+    let lang = changedItem.language.id.substr(0, 2);
 
-    this.subject.notify(this);
+    this.setDefaultLanguage(changedItem);
+    this.replicateValueForSameLanguage(changedItem, lang);
+    this.replicateValueForOtherLanguage(changedItem, lang)
+      .then((v) => {
+        this.subject.notify(this);
+      });
+
   }
+
+  setDefaultLanguage(changedItem){
+    this.items.forEach(item => {
+      if(changedItem === item){
+        item.setDefaultMarker(true);
+      }else{
+        item.setDefaultMarker(false);
+      }
+    });
+  }
+
+  replicateValueForSameLanguage(changedItem, language){
+    this.items.forEach(item => {
+      if(changedItem === item) return;
+
+      if(item.language.id.startsWith(language)){
+        item.value = changedItem.value;
+      }
+    });
+  }
+
+  async replicateValueForOtherLanguage(changedItem, language){
+    let otherLanguages = this.getOtherLanguages(language);
+    let translatedTexts = await this.translateTexts(changedItem.value, language, otherLanguages);
+
+    translatedTexts.forEach(translation => {
+      this.items.forEach(item => {
+        if(changedItem === item || !item.language.id.startsWith(translation.language)) return;
+        item.value = translation.text;
+      });
+    });
+  }
+
+  async translateTexts(text, myLanguage, otherLanguages){
+     return await Promise.all(otherLanguages.map(async (otherLanguage) => {
+      return {
+        language: otherLanguage,
+        text: await translate(text, myLanguage, otherLanguage)
+      };
+    }));
+  }
+
+  getOtherLanguages(myLanguage){
+    return AVALABLE_LANGUAGES.reduce((acc, otherLanguage) => {
+      let lang = otherLanguage.id.substr(0, 2);
+      if(lang != myLanguage && !acc.includes(lang)){
+        acc.push(lang);
+      }
+      return acc;
+    }, []);
+  }
+
 
   render(){
     let insertedLanguages = [];
