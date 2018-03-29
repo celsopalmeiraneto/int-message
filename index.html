@@ -16,6 +16,9 @@
       <h1 class="display-4">Gerador de INT_MESSAGE</h1>
     </nav>
     <div class="container mt-2">
+      <div id="alertFirefox" class="d-none mb-2">
+        <small class="text-muted">No Firefox, certifique-se que "dom.moduleScripts.enabled" está com valor verdadeiro em "about:config".</small>
+      </div>
       <form autocomplete="off">
         <div class="form-group">
           <label for="translationKey">Chaves de Tradução</label>
@@ -32,6 +35,14 @@
         <small class="form-text text-muted">Clique no resultado para copiar para a Área de Transferência.</small>
       </form>
     </div>
+    <script type="text/javascript">
+      (() => {
+        // Firefox 1.0+
+        var isFirefox = typeof InstallTrigger !== 'undefined';
+        if(!isFirefox) return;
+        document.getElementById("alertFirefox").classList.remove("d-none");
+      })();
+    </script>
     <script src="scripts/script.js" type="module" charset="utf-8"></script>
   </body>
 </html>
