@@ -1,11 +1,14 @@
 import KeyGroup from "./KeyGroup.js";
 import Observer from "./Observer/Observer.js";
+import QueryBuilderSGF from "./QueryBuilder/QueryBuilderSGF.js";
+import QueryBuilderCFG_Traducao from "./QueryBuilder/QueryBuilderCFG_Traducao.js";
 
 (() => {
   var translationKeys, translationsBox, translationResult, observer;
   var searchCounter = 0;
 
   var groups = [];
+  var queryBuilder = new QueryBuilderSGF();
 
   document.addEventListener("DOMContentLoaded", () =>{
     populateGlobalVars();
@@ -29,6 +32,25 @@ import Observer from "./Observer/Observer.js";
 
     observer = new Observer(this);
     observer.update = generateResults;
+
+    document.getElementsByName("queryType").forEach((r, i) => {
+      r.onchange = onCheckQueryBuilder;
+      if(i == 0){
+        r.click();
+      }
+    });
+  }
+
+  function onCheckQueryBuilder(e){
+    switch (e.target.value) {
+    case "SGF":
+      queryBuilder = new QueryBuilderSGF();
+      break;
+    case "CFG_Traducao":
+      queryBuilder = new QueryBuilderCFG_Traducao();
+      break;
+    }
+    generateResults();
   }
 
   function copyToClipboardOnFocus(e){
@@ -76,16 +98,6 @@ import Observer from "./Observer/Observer.js";
   }
 
   function generateResults(){
-    let translations = getTranslationFields();
-
-    let result = "BEGIN\n" + translations.reduce((acc, v) => {
-      if(v && v.value && v.value.trim() !== ""){
-        acc += `    PR_ATUALIZA_INT_MESSAGE('${v.dataset.id}', '${v.dataset.key}', '${v.value}', 'N');\n`;
-        return acc;
-      }
-      return acc;
-    }, "");
-
-    translationResult.value = result + "COMMIT;\n END;";
+    translationResult.value = queryBuilder.build(groups);
   }
 })();
