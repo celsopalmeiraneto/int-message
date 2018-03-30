@@ -21,6 +21,7 @@ class KeyGroup {
 
     this.observer = new Observer(this);
     this.observer.update = this._changesOnItems;
+    this.DOMElement = this.render();
 
     this.subject = new Subject();
   }
@@ -117,6 +118,7 @@ class KeyGroup {
     });
 
     group.append(groupItem);
+    this.DOMElement = group;
     return group;
   }
 

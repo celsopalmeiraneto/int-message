@@ -11,7 +11,7 @@ class KeyItem {
 
     this.keyUpQueue = 0;
 
-    this.DOMElement = null;
+    this.DOMElement = this.render();
     this.subject = new Subject();
   }
 

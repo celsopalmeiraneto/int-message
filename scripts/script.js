@@ -11,15 +11,12 @@ import Observer from "./Observer/Observer.js";
     populateGlobalVars();
   }, false);
 
-
   function translationKeyKeyUp(){
     searchCounter++;
-    setTimeout(populateFormDispatcher, 500);
-  }
-
-  function populateFormDispatcher(){
-    searchCounter--;
-    if(searchCounter === 0) return populateForm();
+    setTimeout(()=>{
+      searchCounter--;
+      if(searchCounter === 0) return populateForm();
+    }, 500);
   }
 
   function populateGlobalVars(){
@@ -46,15 +43,23 @@ import Observer from "./Observer/Observer.js";
   }
 
   function populateForm(){
-    translationsBox.innerHTML = ""; // TODO: Make a delta of changes and apply just where it's necessary.
-
-    var keys = parseKeys();
-    keys.forEach(key => {
-      let group = new KeyGroup(key);
-      group.subject.addObserver(observer);
-      groups.push(group);
-      translationsBox.appendChild(group.render());
+    let newGroups = [];
+    parseKeys().forEach((key) => {
+      let group = groups.find(v => v.key == key);
+      if(!group){
+        let group = new KeyGroup(key);
+        group.subject.addObserver(observer);
+        newGroups.push(group);
+        return;
+      }else{
+        newGroups.push(group);
+      }
     });
+
+    translationsBox.innerHTML = "";
+    groups = newGroups;
+    groups.forEach(v => translationsBox.appendChild(v.DOMElement));
+    generateResults();
   }
 
   function getTranslationFields(){
