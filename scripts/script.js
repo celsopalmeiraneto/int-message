@@ -3,6 +3,8 @@ import Observer from "./Observer/Observer.js";
 import QueryBuilderSGF from "./QueryBuilder/QueryBuilderSGF.js";
 import QueryBuilderCFG_Traducao from "./QueryBuilder/QueryBuilderCFG_Traducao.js";
 
+const STATE_VERSION = 1;
+
 (() => {
   var translationKeys, translationsBox, translationResult, observer;
   var searchCounter = 0;
@@ -12,6 +14,7 @@ import QueryBuilderCFG_Traducao from "./QueryBuilder/QueryBuilderCFG_Traducao.js
 
   document.addEventListener("DOMContentLoaded", () =>{
     populateGlobalVars();
+    loadState();
   }, false);
 
   function translationKeyKeyUp(){
@@ -31,7 +34,7 @@ import QueryBuilderCFG_Traducao from "./QueryBuilder/QueryBuilderCFG_Traducao.js
     translationResult.onfocus = copyToClipboardOnFocus;
 
     observer = new Observer(this);
-    observer.update = generateResults;
+    observer.update = onGroupChanges;
 
     document.getElementsByName("queryType").forEach((r, i) => {
       r.onchange = onCheckQueryBuilder;
@@ -84,10 +87,6 @@ import QueryBuilderCFG_Traducao from "./QueryBuilder/QueryBuilderCFG_Traducao.js
     generateResults();
   }
 
-  function getTranslationFields(){
-    return Array.from(document.getElementsByClassName("translationText"));
-  }
-
   function parseKeys(){
     return translationKeys.value.split("\n").reduce((acc, v) => {
       if(typeof v === "string" && v.trim() !== ""){
@@ -95,6 +94,34 @@ import QueryBuilderCFG_Traducao from "./QueryBuilder/QueryBuilderCFG_Traducao.js
       }
       return acc;
     }, []);
+  }
+
+  function onGroupChanges(){
+    generateResults();
+    saveState();
+  }
+
+  function saveState(){
+    let strState = JSON.stringify({
+      _version: STATE_VERSION,
+      state: groups.map(v => KeyGroup.serialize(v)),
+      keys: translationKeys.value
+    });
+    localStorage.setItem("state", strState);
+  }
+
+  function loadState(){
+    let strState = localStorage.getItem("state");
+    if(strState == null) return;
+
+    let state = JSON.parse(strState);
+    if(state._version !== STATE_VERSION) return;
+
+
+    groups = state.state.map(g => KeyGroup.deserialize(g));
+    translationKeys.value = state.keys;
+
+    populateForm();
   }
 
   function generateResults(){

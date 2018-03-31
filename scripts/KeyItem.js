@@ -2,11 +2,11 @@ import Subject from "./Observer/Subject.js";
 
 const KEYB_ALLOWED_KEYS = ["Key", "Digit", "Space", "Numpad", "Backspace", "Delete"];
 
-class KeyItem {
-  constructor(key, language) {
+export default class KeyItem {
+  constructor(key, language, visible) {
     this.key = key;
     this.language = language;
-    this.visible = true;
+    this.visible = visible;
     this._value = "";
 
     this.keyUpQueue = 0;
@@ -36,8 +36,9 @@ class KeyItem {
   }
 
   render(){
+    if(this.DOMElement) return this.DOMElement;
     const itemTemplate = `<label class="mr-2">Tradução</label><span class="badge badge-primary d-none">Padrão</span>
-              <input type="text" class="form-control form-control-sm translationText" value="">`;
+              <input type="text" class="form-control form-control-sm translationText">`;
 
     let item = document.createElement("div");
     item.innerHTML = itemTemplate;
@@ -72,6 +73,20 @@ class KeyItem {
     }
     return false;
   }
-}
 
-export default KeyItem;
+  static serialize(item){
+    return JSON.stringify({
+      key: item.key,
+      language: item.language,
+      value: item.value,
+      visible: item.visible
+    });
+  }
+
+  static deserialize(string){
+    let obj = JSON.parse(string);
+    let item = new KeyItem(obj.key, obj.language, obj.visible);
+    item.value = obj.value;
+    return item;
+  }
+}

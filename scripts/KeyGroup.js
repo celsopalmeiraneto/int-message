@@ -12,17 +12,22 @@ const AVALABLE_LANGUAGES = [
   { id: "es-UY", text: "Espanhol" }
 ];
 
-class KeyGroup {
-  constructor(key){
+export default class KeyGroup {
+  constructor(key, items = null){
     this.key = key;
-    this.items = AVALABLE_LANGUAGES.map(v => {
-      return new KeyItem(this.key, v);
+
+    let insertedLanguages = [];
+    this.items = items || AVALABLE_LANGUAGES.map(v => {
+      let lang = v.id.substr(0, 2);
+      let ret = new KeyItem(this.key, v, !insertedLanguages.includes(lang));
+      insertedLanguages.push(lang);
+      return ret;      
     });
 
     this.observer = new Observer(this);
     this.observer.update = this._changesOnItems;
-    this.DOMElement = this.render();
 
+    this.DOMElement = this.render();
     this.subject = new Subject();
   }
 
@@ -91,7 +96,7 @@ class KeyGroup {
 
 
   render(){
-    let insertedLanguages = [];
+    if(this.DOMElement) return this.DOMElement;
 
     let headerKey = document.createElement("h5");
     headerKey.textContent = this.key;
@@ -106,14 +111,6 @@ class KeyGroup {
 
     this.items.forEach(v => {
       v.subject.addObserver(this.observer);
-      let lang = v.language.id.substr(0, 2);
-
-      if(insertedLanguages.includes(lang)){
-        v.visible = false;
-      }else{
-        insertedLanguages.push(lang);
-      }
-
       groupItem.appendChild(v.render());
     });
 
@@ -122,7 +119,18 @@ class KeyGroup {
     return group;
   }
 
+  static serialize(item){
+    return JSON.stringify({
+      key: item.key,
+      items: JSON.stringify(item.items.map(v => KeyItem.serialize(v)))
+    });
+  }
+
+  static deserialize(string){
+    let obj = JSON.parse(string);
+    let items = JSON.parse(obj.items).map(v => KeyItem.deserialize(v));
+
+    return new KeyGroup(obj.key, items);
+  }
+
 }
-
-
-export default KeyGroup;
