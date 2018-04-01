@@ -118,7 +118,11 @@ const STATE_VERSION = 1;
     if(state._version !== STATE_VERSION) return;
 
 
-    groups = state.state.map(g => KeyGroup.deserialize(g));
+    groups = state.state.map(g => {
+      let group = KeyGroup.deserialize(g);
+      group.subject.addObserver(observer);
+      return group;
+    });
     translationKeys.value = state.keys;
 
     populateForm();
