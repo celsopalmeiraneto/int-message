@@ -31,7 +31,7 @@ const STATE_VERSION = 1;
 
     translationsBox = document.getElementById("translationsBox");
     translationResult = document.getElementById("translationResult");
-    translationResult.onfocus = copyToClipboardOnFocus;
+    document.getElementById("btnCopy").onclick = copyToClipboardOnClick;
 
     observer = new Observer(this);
     observer.update = onGroupChanges;
@@ -56,8 +56,8 @@ const STATE_VERSION = 1;
     generateResults();
   }
 
-  function copyToClipboardOnFocus(e){
-    e.target.select();
+  function copyToClipboardOnClick(){
+    translationResult.select();
     if(document.execCommand("copy")){
       var alert = document.getElementById("copyAlert");
       alert.style.display = "block";
