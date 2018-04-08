@@ -1,20 +1,20 @@
-import ObserverList from "./ObserverList.js";
+import ObserverList from './ObserverList.js';
 
 class Subject {
   constructor() {
     this.observers = new ObserverList();
   }
 
-  addObserver(observer){
+  addObserver(observer) {
     this.observers.add(observer);
   }
 
-  removeObserver(observer){
+  removeObserver(observer) {
     this.observers.removeAt(this.observers.indexOf(observer));
   }
 
-  notify(news){
-    for (let observer of this.observers){
+  notify(news) {
+    for (let observer of this.observers) {
       observer.update.call(observer.context, news);
     }
   }

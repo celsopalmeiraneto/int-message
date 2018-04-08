@@ -1,20 +1,20 @@
-function translate(text, from, to){
+function translate(text, from, to) {
   return new Promise((resolve, reject) => {
     let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    fetch("https://us-central1-meta-router-115516.cloudfunctions.net/translate-something", {
-      method: "POST",
+    headers.append('Content-Type', 'application/json');
+    fetch('https://us-central1-meta-router-115516.cloudfunctions.net/translate-something', {
+      method: 'POST',
       headers,
       body: JSON.stringify({
         from,
         to,
-        text
-      })
+        text,
+      }),
     })
       .then((response) => {
         response.json()
-          .then(v => resolve(v.text))
-          .catch(v => reject(v));
+          .then((v) => resolve(v.text))
+          .catch((v) => reject(v));
       })
       .catch((error) => {
         reject(error);
@@ -22,4 +22,4 @@ function translate(text, from, to){
   });
 }
 
-export { translate };
+export {translate};

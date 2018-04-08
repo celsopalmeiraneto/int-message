@@ -1,9 +1,9 @@
 class Observer {
-  constructor(context){
+  constructor(context) {
     this.context = context;
   }
 
-  update(){
+  update() {
 
   }
 }
