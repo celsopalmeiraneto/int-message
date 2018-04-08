@@ -1,0 +1,13 @@
+{
+  "name": "intMessage",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/celsopalmeiraneto/intMessage.git",
+  "author": "Celso Neto <celsopalmeiraneto@gmail.com>",
+  "license": "Unlicense",
+  "private": true,
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-google": "^0.9.1"
+  }
+}
