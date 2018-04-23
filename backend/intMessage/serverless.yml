@@ -1,0 +1,27 @@
+service: intmessage
+
+provider:
+  name: google
+  runtime: nodejs
+  project: meta-router-115516
+  # the path to the credentials file needs to be absolute
+  credentials: ~/.gcloud/keyfile.json
+  memorySize: 128
+  timeout: 90s
+
+plugins:
+  - serverless-google-cloudfunctions
+
+# needs more granular excluding in production as only the serverless provider npm
+# package should be excluded (and not the whole node_modules directory)
+package:
+  exclude:
+    - node_modules/**
+    - .gitignore
+    - .git/**
+
+functions:
+  translate:
+    handler: intMessage
+    events:
+      - http: path

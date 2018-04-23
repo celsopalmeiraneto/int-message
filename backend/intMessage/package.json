@@ -1,0 +1,13 @@
+{
+  "name": "intMessage",
+  "version": "0.1.0",
+  "description": "Basic IntMessage API",
+  "main": "index.js",
+  "author": "Celso Neto",
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "@google-cloud/translate": "^1.1.0",
+    "serverless-google-cloudfunctions": "^1.1.1"
+  }
+}
