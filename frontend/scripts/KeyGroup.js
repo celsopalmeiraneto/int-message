@@ -64,24 +64,36 @@ export default class KeyGroup {
 
   async replicateValueForOtherLanguage(changedItem, language) {
     let otherLanguages = this.getOtherLanguages(language);
+
+    let disabledItems = this.items.filter((v) => {
+      return otherLanguages.includes(v.language.id.substr(0, 2));
+    })
+    .map((v) => v.disableInput());
+
     let translatedTexts =
     await this.translateTexts(changedItem.value, language, otherLanguages);
 
-    translatedTexts.forEach((translation) => {
-      this.items.forEach((item) => {
-        if (changedItem === item ||
-          !item.language.id.startsWith(translation.language)) return;
-        item.value = translation.text;
+    disabledItems.map((v) => {
+      v.value = translatedTexts.find((translation) => {
+        return v.language.id.startsWith(translation.language);
       });
-    });
+      v.value = v.value ? v.value.text : '';
+      return v;
+    })
+    .forEach((v) => v.enableInput());
   }
 
   async translateTexts(text, myLanguage, otherLanguages) {
     return await Promise.all(otherLanguages.map(async (otherLanguage) => {
-      return {
+      let returnObject = {
         language: otherLanguage,
         text: await translate(text, myLanguage, otherLanguage),
       };
+
+      if (!returnObject.text) {
+        returnObject.text = await translate(text, myLanguage, otherLanguage);
+      }
+      return returnObject;
     }));
   }
 

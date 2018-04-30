@@ -17,6 +17,16 @@ export default class KeyItem {
     this.subject = new Subject();
   }
 
+  disableInput() {
+    this.DOMElement.children.item(2).disabled = true;
+    return this;
+  }
+
+  enableInput() {
+    this.DOMElement.children.item(2).disabled = false;
+    return this;
+  }
+
   get value() {
     return this._value;
   }
