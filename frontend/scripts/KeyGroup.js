@@ -56,7 +56,7 @@ export default class KeyGroup {
     this.items.forEach((item) => {
       if (changedItem === item) return;
 
-      if (item.language.id.startsWith(language)) {
+      if (item.isTranslatable() && item.language.id.startsWith(language)) {
         item.value = changedItem.value;
       }
     });
@@ -66,7 +66,8 @@ export default class KeyGroup {
     let otherLanguages = this.getOtherLanguages(language);
 
     let disabledItems = this.items.filter((v) => {
-      return otherLanguages.includes(v.language.id.substr(0, 2));
+      return v.isTranslatable() &&
+        otherLanguages.includes(v.language.id.substr(0, 2));
     })
     .map((v) => v.disableInput());
 

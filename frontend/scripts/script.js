@@ -3,7 +3,7 @@ import Observer from './Observer/Observer.js';
 import QueryBuilderSGF from './QueryBuilder/QueryBuilderSGF.js';
 import QueryBuilderCFGTraducao from './QueryBuilder/QueryBuilderCFGTraducao.js';
 
-const STATE_VERSION = 1;
+const STATE_VERSION = 1.1;
 
 (() => {
   let translationKeys;
